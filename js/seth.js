@@ -7,8 +7,8 @@ async function main() {
 
     const App = await init_ethers();
 
-    _print(`Initialized ${App.YOUR_ADDRESS}`);
-    _print("Reading smart contracts...");
+    _print(`初始化 ${App.YOUR_ADDRESS}`);
+    _print("阅读智能合约...");
 
     const SYNTH_UNIV1_SETH_STAKING_POOL = new ethers.Contract(SYNTH_UNIV1_SETH_STAKING_POOL_ADDR, SYNTH_UNIV1_SETH_STAKING_POOL_ABI, App.provider);
     const UNISWAPV1_SETH_ETH_POOL = new ethers.Contract(UNISWAP_SETH_ETH_POOL_ADDR, UNISWAP_SETH_ETH_POOL_ABI, App.provider);
@@ -33,7 +33,7 @@ async function main() {
     const weekly_reward = await get_synth_weekly_rewards(SYNTH_UNIV1_SETH_STAKING_POOL);
     const rewardPerToken = weekly_reward / totalStakedUniv1SethEthTokenAmount;
 
-    _print("Finished reading smart contracts... Looking up prices... \n")
+    _print("已阅读完智能合约... 正在查找价格... \n")
 
     // CoinGecko price lookup
     const prices = await lookUpPrices(["havven", "ethereum", "seth"]);
@@ -44,31 +44,31 @@ async function main() {
 
     const Univ1SethEthPricePerToken = toFixed(ETHPerToken * ETHPrice + sETHPerToken * sETHPrice, 2);
 
-    _print("========== PRICES ==========")
-    _print(`1 SNX            = $${SNXPrice}\n`);
+    _print("========== 价格比 ==========")
+    _print(`1 SNX          = $${SNXPrice}\n`);
 
-    _print(`1 sETH           = $${sETHPrice}`);
-    _print(`1 ETH            = $${ETHPrice}`);
-    _print(`1 UNI-V1 (sETH)  = [${toFixed(sETHPerToken, 4)} sETH, ${toFixed(ETHPerToken, 4)} ETH]`);
-    _print(`                 = $${toFixed(sETHPerToken * sETHPrice + ETHPerToken * ETHPrice, 2)} \n`);
+    _print(`1 sETH         = $${sETHPrice}`);
+    _print(`1 ETH          = $${ETHPrice}`);
+    _print(`1 UNI-V1(sETH) = [${toFixed(sETHPerToken, 4)} sETH, ${toFixed(ETHPerToken, 4)} ETH]`);
+    _print(`               = $${toFixed(sETHPerToken * sETHPrice + ETHPerToken * ETHPrice, 2)} \n`);
 
 
-    _print("========= STAKING ==========")
-    _print(`There are total   : ${totalUniv1SethEthTokenSupply} UNI-V1 (sETH) given out by Uniswap.`);
-    _print(`There are total   : ${totalStakedUniv1SethEthTokenAmount} UNI-V1 (sETH) staked in Synthetix's pool. \n`);
-    _print(`You are staking   : ${yourStakedUniv1Amount} UNI-V1 (sETH) (${toFixed(stakingPoolPercentage, 5)}% of the pool)`);
-    _print(`                  = [${toFixed(yourStakedUniv1Amount * sETHPerToken, 4)} sETH, ${toFixed(yourStakedUniv1Amount * ETHPerToken, 4)} ETH]`);
-    _print(`                  = $${toFixed(Univ1SethEthPricePerToken * yourStakedUniv1Amount, 2)}\n`);
+    _print("========= 质押 ==========")
+    _print(`总共有         : ${totalUniv1SethEthTokenSupply} UNI-V1 (sETH) given out by Uniswap.`);
+    _print(`总共有         : ${totalStakedUniv1SethEthTokenAmount} UNI-V1 (sETH) staked in Synthetix's pool. \n`);
+    _print(`你在质押       : ${yourStakedUniv1Amount} UNI-V1 (sETH) (${toFixed(stakingPoolPercentage, 5)}% of the pool)`);
+    _print(`                 = [${toFixed(yourStakedUniv1Amount * sETHPerToken, 4)} sETH, ${toFixed(yourStakedUniv1Amount * ETHPerToken, 4)} ETH]`);
+    _print(`                 = $${toFixed(Univ1SethEthPricePerToken * yourStakedUniv1Amount, 2)}\n`);
 
-    _print("======== SNX REWARDS =======")
-    _print(`Claimable Rewards : ${earnedSNX} SNX`);
-    _print(`                  = $${toFixed(earnedSNX * SNXPrice, 2)}\n`)
+    _print("======== SNX 奖励 =======")
+    _print(`领取奖励       : ${earnedSNX} SNX`);
+    _print(`                 = $${toFixed(earnedSNX * SNXPrice, 2)}\n`)
 
-    _print(`Weekly estimate   : ${rewardPerToken * yourStakedUniv1Amount} SNX (out of total ${weekly_reward} SNX)`)
-    _print(`                  = $${toFixed((rewardPerToken * yourStakedUniv1Amount) * SNXPrice , 2)}`)
+    _print(`每周估算       : ${rewardPerToken * yourStakedUniv1Amount} SNX (out of total ${weekly_reward} SNX)`)
+    _print(`                 = $${toFixed((rewardPerToken * yourStakedUniv1Amount) * SNXPrice , 2)}`)
     const SNXWeeklyROI = rewardPerToken * SNXPrice * 100 / Univ1SethEthPricePerToken;
-    _print(`Weekly ROI        : ${toFixed(SNXWeeklyROI, 4)}%`)
-    _print(`APR (Unstable)    : ${toFixed(SNXWeeklyROI * 52, 4)}%`)
+    _print(`每周投资回报率 : ${toFixed(SNXWeeklyROI, 4)}%`)
+    _print(`年利率 (不稳定): ${toFixed(SNXWeeklyROI * 52, 4)}%`)
 
     hideLoading();
 

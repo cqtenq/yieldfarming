@@ -7,8 +7,8 @@ async function main() {
 
     const App = await init_ethers();
 
-    _print(`Initialized ${App.YOUR_ADDRESS}`);
-    _print("Reading smart contracts...");
+    _print(`初始化 ${App.YOUR_ADDRESS}`);
+    _print("阅读智能合约...");
 
     const YGOV_VOTING_POOL = new ethers.Contract(YGOV_BPT_2_STAKING_POOL_ADDR, YGOV_BPT_2_STAKING_POOL_ABI, App.provider);
     const YFI_YCRV_BPT_TOKEN_CONTRACT = new ethers.Contract(YFI_YCRV_BPT_TOKEN_ADDR, ERC20_ABI, App.provider);
@@ -90,7 +90,7 @@ async function main() {
         if (PROPOSAL_DESCRIPTION.hasOwnProperty(i)) {
             _print(PROPOSAL_DESCRIPTION[i])
         } else {
-            _print_href("No description yet. Please check gov.yearn.finance for latest update.", "https://gov.yearn.finance/");
+            _print_href("暂无描述。 请检查gov.yearn.finance以获取最新更新。", "https://gov.yearn.finance/");
             _print("");
         }
 

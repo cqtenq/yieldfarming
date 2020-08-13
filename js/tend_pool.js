@@ -7,8 +7,8 @@ async function main() {
 
     const App = await init_ethers();
 
-    _print(`Initialized ${App.YOUR_ADDRESS}`);
-    _print("Reading smart contracts...");
+    _print(`初始化 ${App.YOUR_ADDRESS}`);
+    _print("阅读智能合约...");
 
     const TEND_TOKEN = new ethers.Contract(TEND_TOKEN_ADDR, TEND_TOKEN_ABI, App.provider);
     const WEEBTEND_TOKEN = new ethers.Contract(WEEBTEND_TOKEN_ADDR, WEEBTEND_TOKEN_ABI, App.provider);
@@ -33,7 +33,7 @@ async function main() {
 
     // Uniswap V1 sETH-ETH Pool
 
-    _print("Finished reading smart contracts... Looking up prices... \n")
+    _print("已阅读完智能合约... 正在查找价格... \n")
 
     // CoinGecko price lookup
     const prices = await lookUpPrices(["tendies"]);
@@ -41,17 +41,17 @@ async function main() {
     const TENDPrice = prices.tendies.usd;
     const WEEBTENDPrice = TENDPrice * weebTendPricePerFullShare / 1e18;
 
-    _print("========== PRICES ==========")
-    _print(`1 TEND            = $${TENDPrice}`);
-    _print(`1 weebTEND        = $${WEEBTENDPrice}\n`);
+    _print("========== 价格比 ==========")
+    _print(`1 TEND      = $${TENDPrice}`);
+    _print(`1 weebTEND  = $${WEEBTENDPrice}\n`);
 
-    _print("========= STAKING ==========")
-    _print(`There are total   : ${totalTENDSupply / 1e18} TEND in the world`);
-    _print(`There are total   : ${totalStakedTEND} TEND staked in the community pool.`);
-    _print(`                  = ${toDollar(totalStakedTEND * TENDPrice)} \n`);
-    _print(`You are staking   : ${yourWeebTendAmount} weebTEND = (${toFixed(yourWeebTendAmount * 100 / weebTendTotalSupply, 2)}% of the pool)`);
-    _print(`                  = ${yourStakedTEND} TEND`);
-    _print(`                  = ${toDollar(yourStakedTEND * TENDPrice)}\n`);
+    _print("========= 质押 ==========")
+    _print(`总共有     : ${totalTENDSupply / 1e18} TEND in the world`);
+    _print(`总共有     : ${totalStakedTEND} TEND staked in the community pool.`);
+    _print(`             = ${toDollar(totalStakedTEND * TENDPrice)} \n`);
+    _print(`你在质押   : ${yourWeebTendAmount} weebTEND = (${toFixed(yourWeebTendAmount * 100 / weebTendTotalSupply, 2)}% of the pool)`);
+    _print(`             = ${yourStakedTEND} TEND`);
+    _print(`             = ${toDollar(yourStakedTEND * TENDPrice)}\n`);
 
     let signer = null;
 

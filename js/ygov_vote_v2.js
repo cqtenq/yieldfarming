@@ -7,11 +7,11 @@ async function main() {
 
     const App = await init_ethers();
 
-    _print_href("Ygov voting V1", "https://yieldfarming.info/yearn/vote/old.html");
+    _print_href("Ygov投票V1", "https://yieldfarming.info/yearn/vote/old.html");
     _print("");
 
     _print(`Initialized ${App.YOUR_ADDRESS}`);
-    _print("Reading smart contracts...");
+    _print("阅读智能合约...");
 
     const YGOV_VOTING_POOL = new ethers.Contract(YFI_VOTING_POOL_ADDR, YFI_VOTING_POOL_ABI, App.provider);
     const YFI_TOKEN = new ethers.Contract(YFI_TOKEN_ADDR, ERC20_ABI, App.provider);
@@ -86,11 +86,11 @@ async function main() {
 
         if (wasVotingPeriodOver && !isVotingPeriodOver) {
             _print(`\n=============================================================`)
-            _print(`==================== ON GOING PROPOSALS =====================`)
+            _print(`==================== 进行中的提案 =====================`)
             _print(`=============================================================\n\n`)
         }
 
-        _print_bold(`====== PROPOSAL #${i} ======`);
+        _print_bold(`====== 提案 #${i} ======`);
 
         const info = await $.ajax({
             url: hash,

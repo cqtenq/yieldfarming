@@ -7,8 +7,8 @@ async function main() {
 
     const App = await init_ethers();
 
-    _print(`Initialized ${App.YOUR_ADDRESS}`);
-    _print("Reading smart contracts...");
+    _print(`初始化 ${App.YOUR_ADDRESS}`);
+    _print("阅读智能合约...");
 
     const YFFI_POOL_2 = new ethers.Contract(YFFI_POOL_2_ADDR, YGOV_BPT_STAKING_POOL_ABI, App.provider);
     const YFFI_DAI_BALANCER_POOL = new ethers.Contract(YFFI_DAI_BPT_TOKEN_ADDR, BALANCER_POOL_ABI, App.provider);
@@ -35,7 +35,7 @@ async function main() {
     const YVirtualPrice = await CURVE_Y_POOL.get_virtual_price() / 1e18;
 
 
-    _print("Finished reading smart contracts... Looking up prices... \n")
+    _print("已阅读完智能合约... 正在查找价格... \n")
 
     // Look up prices
     const prices = await lookUpPrices(["dai"]);
@@ -48,43 +48,43 @@ async function main() {
 
     // Finished. Start printing
 
-    _print("========== PRICES ==========")
+    _print("========== 价格比 ==========")
     _print(`1 YFFI  = ${toDollar(YFFIPrice)} or ${toDollar(YFFIPrice2)} in yCRV pool.` );
     _print(`1 DAI   = $${DAIPrice}\n`);
     _print(`1 BPT   = [${YFFIPerBPT} YFII, ${DAIPerBPT} DAI]`);
     _print(`        = ${toDollar(YFFIPerBPT * YFFIPrice + DAIPerBPT * DAIPrice)}\n`);
 
-    _print("========== STAKING =========")
-    _print(`There are total   : ${totalBPTAmount} BPT issued by YFFI DAI Balancer Pool.`);
-    _print(`There are total   : ${totalStakedBPTAmount} BPT staked in YFFI's BPT staking pool.`);
-    _print(`                  = ${toDollar(totalStakedBPTAmount * BPTPrice)}\n`);
-    _print(`You are staking   : ${stakedBPTAmount} BPT (${toFixed(stakedBPTAmount * 100 / totalStakedBPTAmount, 3)}% of the pool)`);
-    _print(`                  = [${YFFIPerBPT * stakedBPTAmount} YFFI, ${DAIPerBPT * stakedBPTAmount} DAI]`);
-    _print(`                  = ${toDollar(YFFIPerBPT * stakedBPTAmount * YFFIPrice + DAIPerBPT * stakedBPTAmount * DAIPrice)}\n`);
+    _print("========== 质押 =========")
+    _print(`总共有  : ${totalBPTAmount} BPT issued by YFFI DAI Balancer Pool.`);
+    _print(`总共有  : ${totalStakedBPTAmount} BPT staked in YFFI's BPT staking pool.`);
+    _print(`         = ${toDollar(totalStakedBPTAmount * BPTPrice)}\n`);
+    _print(`你在质押: ${stakedBPTAmount} BPT (${toFixed(stakedBPTAmount * 100 / totalStakedBPTAmount, 3)}% of the pool)`);
+    _print(`         = [${YFFIPerBPT * stakedBPTAmount} YFFI, ${DAIPerBPT * stakedBPTAmount} DAI]`);
+    _print(`         = ${toDollar(YFFIPerBPT * stakedBPTAmount * YFFIPrice + DAIPerBPT * stakedBPTAmount * DAIPrice)}\n`);
 
     // YFII REWARDS
-    _print("======== YFII REWARDS ========")
+    _print("======== YFII 奖励 ========")
     // _print(" (Temporarily paused until further emission model is voted by the community) ");
-    _print(`Claimable Rewards : ${toFixed(earnedYFFI, 4)} YFFI = ${toDollar(earnedYFFI * YFFIPrice)}`);
+    _print(`领取奖励: ${toFixed(earnedYFFI, 4)} YFFI = ${toDollar(earnedYFFI * YFFIPrice)}`);
     const YFFIWeeklyEstimate = rewardPerToken * stakedBPTAmount;
 
-    _print(`Hourly estimate   : ${toFixed(YFFIWeeklyEstimate / (7 * 24), 4)} YFFI = ${toDollar((YFFIWeeklyEstimate / (7 * 24)) * YFFIPrice)} (out of total ${toFixed(weekly_reward / (7 * 24), 2)} YFFI)`)
-    _print(`Daily estimate    : ${toFixed(YFFIWeeklyEstimate / 7, 4)} YFFI = ${toDollar((YFFIWeeklyEstimate / 7) * YFFIPrice)} (out of total  ${toFixed(weekly_reward / 7, 2)} YFFI)`)
-    _print(`Weekly estimate   : ${toFixed(YFFIWeeklyEstimate, 4)} YFFI = ${toDollar(YFFIWeeklyEstimate * YFFIPrice)} (out of total ${weekly_reward} YFFI)`)
+    _print(`每小时估算: ${toFixed(YFFIWeeklyEstimate / (7 * 24), 4)} YFFI = ${toDollar((YFFIWeeklyEstimate / (7 * 24)) * YFFIPrice)} (out of total ${toFixed(weekly_reward / (7 * 24), 2)} YFFI)`)
+    _print(`每日估算  : ${toFixed(YFFIWeeklyEstimate / 7, 4)} YFFI = ${toDollar((YFFIWeeklyEstimate / 7) * YFFIPrice)} (out of total  ${toFixed(weekly_reward / 7, 2)} YFFI)`)
+    _print(`每周估算  : ${toFixed(YFFIWeeklyEstimate, 4)} YFFI = ${toDollar(YFFIWeeklyEstimate * YFFIPrice)} (out of total ${weekly_reward} YFFI)`)
     const YFFIWeeklyROI = (rewardPerToken * YFFIPrice) * 100 / (BPTPrice);
 
-    _print(`\nHourly ROI in USD : ${toFixed((YFFIWeeklyROI / 7) / 24, 4)}%`);
-    _print(`Daily ROI in USD  : ${toFixed(YFFIWeeklyROI / 7, 4)}%`);
-    _print(`Weekly ROI in USD : ${toFixed(YFFIWeeklyROI, 4)}%`);
-    _print(`APY (unstable)    : ${toFixed(YFFIWeeklyROI * 52, 4)}% \n`);
+    _print(`\n每小时投资回报率（美元）: ${toFixed((YFFIWeeklyROI / 7) / 24, 4)}%`);
+    _print(`每日投资回报率（美元）    : ${toFixed(YFFIWeeklyROI / 7, 4)}%`);
+    _print(`每周投资回报率（美元）    : ${toFixed(YFFIWeeklyROI, 4)}%`);
+    _print(`年利率 (不稳定)           : ${toFixed(YFFIWeeklyROI * 52, 4)}% \n`);
 
     const timeTilHalving = nextHalving - (Date.now() / 1000);
 
-    _print(`Next halving      : in ${forHumans(timeTilHalving)} \n`)
+    _print(`下半部  : in ${forHumans(timeTilHalving)} \n`)
 
     // BAL REWARDS
-    _print("======= BAL REWARDS ? =======")
-    _print(`    Not whitelisted yet?`);
+    _print("======= BAL 奖励 ? =======")
+    _print(`    尚未列入白名单?`);
     _print(`    Check http://www.predictions.exchange/balancer/ for latest update \n`)
 
     hideLoading();

@@ -7,8 +7,8 @@ async function main() {
 
     const App = await init_ethers();
 
-    _print(`Initialized ${App.YOUR_ADDRESS}`);
-    _print("Reading smart contracts...");
+    _print(`初始化 ${App.YOUR_ADDRESS}`);
+    _print("阅读智能合约...");
 
     const YGOV_BPT_POOL = new ethers.Contract(YFII_BPT_STAKING_POOL_ADDR, YGOV_BPT_STAKING_POOL_ABI, App.provider);
     const YFI_DAI_BALANCER_POOL = new ethers.Contract(YFII_DAI_BPT_TOKEN_ADDR, BALANCER_POOL_ABI, App.provider);
@@ -30,7 +30,7 @@ async function main() {
 
     const rewardPerToken = weekly_reward / totalStakedBPTAmount;
 
-    _print("Finished reading smart contracts... Looking up prices... \n")
+    _print("已阅读完智能合约... 正在查找价格... \n")
 
     // Look up prices
     const prices = await lookUpPrices(["dai"]);
@@ -41,36 +41,36 @@ async function main() {
 
     // Finished. Start printing
 
-    _print("========== PRICES ==========")
-    _print(`1 YFII  = $${YFIIPrice}`);
-    _print(`1 DAI   = $${DAIPrice}\n`);
-    _print(`1 BPT   = [${YFIPerBPT} YFII, ${DAIPerBPT} DAI]`);
-    _print(`        = ${toDollar(YFIPerBPT * YFIIPrice + DAIPerBPT * DAIPrice)}\n`);
+    _print("========== 价格比 ==========")
+    _print(`1 YFII   = $${YFIIPrice}`);
+    _print(`1 DAI    = $${DAIPrice}\n`);
+    _print(`1 BPT    = [${YFIPerBPT} YFII, ${DAIPerBPT} DAI]`);
+    _print(`         = ${toDollar(YFIPerBPT * YFIIPrice + DAIPerBPT * DAIPrice)}\n`);
 
-    _print("========== STAKING =========")
-    _print(`There are total   : ${totalBPTAmount} BPT issued by YFII DAI Balancer Pool.`);
-    _print(`There are total   : ${totalStakedBPTAmount} BPT staked in YFII's BPT staking pool.`);
-    _print(`                  = ${toDollar(totalStakedBPTAmount * BPTPrice)}\n`);
-    _print(`You are staking   : ${stakedBPTAmount} BPT (${toFixed(stakedBPTAmount * 100 / totalStakedBPTAmount, 3)}% of the pool)`);
-    _print(`                  = [${YFIPerBPT * stakedBPTAmount} YFII, ${DAIPerBPT * stakedBPTAmount} DAI]`);
-    _print(`                  = ${toDollar(YFIPerBPT * stakedBPTAmount * YFIIPrice + DAIPerBPT * stakedBPTAmount * DAIPrice)}\n`);
+    _print("========== 质押 =========")
+    _print(`总共有  : ${totalBPTAmount} BPT issued by YFII DAI Balancer Pool.`);
+    _print(`总共有  : ${totalStakedBPTAmount} BPT staked in YFII's BPT staking pool.`);
+    _print(`          = ${toDollar(totalStakedBPTAmount * BPTPrice)}\n`);
+    _print(`你在质押: ${stakedBPTAmount} BPT (${toFixed(stakedBPTAmount * 100 / totalStakedBPTAmount, 3)}% of the pool)`);
+    _print(`          = [${YFIPerBPT * stakedBPTAmount} YFII, ${DAIPerBPT * stakedBPTAmount} DAI]`);
+    _print(`          = ${toDollar(YFIPerBPT * stakedBPTAmount * YFIIPrice + DAIPerBPT * stakedBPTAmount * DAIPrice)}\n`);
 
     // YFII REWARDS
-    _print("======== YFII REWARDS ========")
+    _print("======== YFII 奖励 ========")
     // _print(" (Temporarily paused until further emission model is voted by the community) ");
-    _print(`Claimable Rewards : ${toFixed(earnedYFI, 4)} YFII = ${toDollar(earnedYFI * YFIIPrice)}`);
-    _print(`Weekly estimate   : ${toFixed(rewardPerToken * stakedBPTAmount, 2)} YFII = ${toDollar(rewardPerToken * stakedBPTAmount * YFIIPrice)} (out of total ${weekly_reward} YFII)`)
+    _print(`领取奖励: ${toFixed(earnedYFI, 4)} YFII = ${toDollar(earnedYFI * YFIIPrice)}`);
+    _print(`每周估算: ${toFixed(rewardPerToken * stakedBPTAmount, 2)} YFII = ${toDollar(rewardPerToken * stakedBPTAmount * YFIIPrice)} (out of total ${weekly_reward} YFII)`)
     const YFIWeeklyROI = (rewardPerToken * YFIIPrice) * 100 / (BPTPrice);
-    _print(`Weekly ROI in USD : ${toFixed(YFIWeeklyROI, 4)}%`)
-    _print(`APY (unstable)    : ${toFixed(YFIWeeklyROI * 52, 4)}% \n`)
+    _print(`每周投资回报率（美元）: ${toFixed(YFIWeeklyROI, 4)}%`)
+    _print(`年利率 (不稳定)       : ${toFixed(YFIWeeklyROI * 52, 4)}% \n`)
 
     const timeTilHalving = nextHalving - (Date.now() / 1000);
 
-    _print(`Next halving      : in ${forHumans(timeTilHalving)} \n`)
+    _print(`下半部 : in ${forHumans(timeTilHalving)} \n`)
 
     // BAL REWARDS
-    _print("======= BAL REWARDS ? =======")
-    _print(`    Not whitelisted yet?`);
+    _print("======= BAL 奖励 ? =======")
+    _print(`    尚未列入白名单？`);
     _print(`    Check http://www.predictions.exchange/balancer/ for latest update \n`)
 
     hideLoading();

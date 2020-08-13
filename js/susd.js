@@ -7,8 +7,8 @@ async function main() {
 
     const App = await init_ethers();
 
-    _print(`Initialized ${App.YOUR_ADDRESS}`);
-    _print("Reading smart contracts...");
+    _print(`初始化 ${App.YOUR_ADDRESS}`);
+    _print("阅读智能合约...");
 
     const CURVE_SUSD_POOL = new ethers.Contract(CURVE_SUSD_POOL_ADDR, CURVE_SUSD_POOL_ABI, App.provider);
     const SYNTH_crvPlain3andSUSD_POOL = new ethers.Contract(SYNTH_crvPlain3andSUSD_STAKING_POOL_ADDR, SYNTH_crvPlain3andSUSD_STAKING_POOL_ABI, App.provider);
@@ -38,7 +38,7 @@ async function main() {
     const weekly_reward = await get_synth_weekly_rewards(SYNTH_crvPlain3andSUSD_POOL);
     const rewardPerToken = weekly_reward / totalStakedCrvPlain3andSUSDAmount;
 
-    _print("Finished reading smart contracts... Looking up prices... \n")
+    _print("已阅读完智能合约... 正在查找价格... \n")
 
     // CoinGecko price lookup
     const prices = await lookUpPrices(["havven", "dai", "usd-coin", "tether", "nusd"]);
@@ -55,33 +55,33 @@ async function main() {
         USDTPerToken * USDTPrice +
         sUSDPerToken * sUSDPrice, 2);
 
-    _print("========== PRICES ==========")
-    _print(`1 SNX  = $${SNXPrice}\n`);
+    _print("========== 价格比 ==========")
+    _print(`1 SNX   = $${SNXPrice}\n`);
 
-    _print(`1 DAI  = $${DAIPrice}`);
-    _print(`1 USDC = $${USDCPrice}`);
-    _print(`1 USDT = $${USDTPrice}`);
-    _print(`1 sUSD = $${sUSDPrice}\n`);
+    _print(`1 DAI   = $${DAIPrice}`);
+    _print(`1 USDC  = $${USDCPrice}`);
+    _print(`1 USDT  = $${USDTPrice}`);
+    _print(`1 sUSD  = $${sUSDPrice}\n`);
 
-    _print("========= STAKING ==========")
-    _print(`There are total   : ${totalCrvPlain3andSUSDSupply} crvPlain3andSUSD given out by Curve.`);
-    _print(`There are total   : ${totalStakedCrvPlain3andSUSDAmount} crvPlain3andSUSD staked in Synthetix's pool.`);
-    _print(`                  = ${toDollar(totalStakedCrvPlain3andSUSDAmount * crvPlain3andSUSDPricePerToken)} \n`);
-    _print(`You are staking   : ${stakedCRVAmount} crvPlain3andSUSD (${toFixed(stakingPoolPercentage, 5)}% of the pool)`);
-    _print(`                  ≈ ${toDollar(crvPlain3andSUSDPricePerToken * stakedCRVAmount)} (Averaged)\n`);
+    _print("========= 质押 ==========")
+    _print(`总共有  : ${totalCrvPlain3andSUSDSupply} crvPlain3andSUSD given out by Curve.`);
+    _print(`总共有  : ${totalStakedCrvPlain3andSUSDAmount} crvPlain3andSUSD staked in Synthetix's pool.`);
+    _print(`          = ${toDollar(totalStakedCrvPlain3andSUSDAmount * crvPlain3andSUSDPricePerToken)} \n`);
+    _print(`你在质押: ${stakedCRVAmount} crvPlain3andSUSD (${toFixed(stakingPoolPercentage, 5)}% of the pool)`);
+    _print(`          ≈ ${toDollar(crvPlain3andSUSDPricePerToken * stakedCRVAmount)} (Averaged)\n`);
 
-    _print("======== SNX REWARDS =======")
-    _print(`Claimable Rewards : ${earnedSNX} SNX`);
-    _print(`                  = ${toDollar(earnedSNX * SNXPrice)}\n`)
+    _print("======== SNX 奖励 =======")
+    _print(`领取奖励: ${earnedSNX} SNX`);
+    _print(`           = ${toDollar(earnedSNX * SNXPrice)}\n`)
 
-    _print(`Weekly estimate   : ${rewardPerToken * stakedCRVAmount} SNX (out of total ${weekly_reward} SNX)`)
-    _print(`                  = ${toDollar((rewardPerToken * stakedCRVAmount) * SNXPrice)}`)
+    _print(`每周估算: ${rewardPerToken * stakedCRVAmount} SNX (out of total ${weekly_reward} SNX)`)
+    _print(`          = ${toDollar((rewardPerToken * stakedCRVAmount) * SNXPrice)}`)
     const SNXWeeklyROI = rewardPerToken * SNXPrice * 100 / crvPlain3andSUSDPricePerToken;
-    _print(`Weekly ROI in USD : ${toFixed(SNXWeeklyROI, 4)}%`)
-    _print(`APR (unstable)    : ${toFixed(SNXWeeklyROI * 52, 4)}% \n`)
+    _print(`每周投资回报率（美元）: ${toFixed(SNXWeeklyROI, 4)}%`)
+    _print(`年利率 (不稳定)       : ${toFixed(SNXWeeklyROI * 52, 4)}% \n`)
 
-    _print("======== CRV REWARDS ========")
-    _print(`    Not distributed yet`);
+    _print("======== CRV 奖励 ========")
+    _print(`    尚未分发`);
     hideLoading();
 
 }

@@ -7,8 +7,8 @@ async function main() {
 
     const App = await init_ethers();
 
-    _print(`Initialized ${App.YOUR_ADDRESS}`);
-    _print("Reading smart contracts...");
+    _print(`初始化 ${App.YOUR_ADDRESS}`);
+    _print("阅读智能合约...");
 
     const Y_STAKING_POOL = new ethers.Contract(YFFI_POOL_1_ADDR, Y_STAKING_POOL_ABI, App.provider);
     const CURVE_Y_POOL = new ethers.Contract(CURVE_Y_POOL_ADDR, CURVE_Y_POOL_ABI, App.provider);
@@ -32,7 +32,7 @@ async function main() {
     // Find out underlying assets of Y
     const YVirtualPrice = await CURVE_Y_POOL.get_virtual_price() / 1e18;
 
-    _print("Finished reading smart contracts... Looking up prices... \n")
+    _print("已阅读完智能合约... 正在查找价格... \n")
 
     // Look up prices
     // const prices = await lookUpPrices(["yearn-finance"]);
@@ -44,41 +44,41 @@ async function main() {
 
     // Finished. Start printing
 
-    _print("========== PRICES ==========")
+    _print("========== 价格比 ==========")
     _print(`1 YFFI  = $${YFFIPrice}`);
     _print(`1 yCRV  = $${YVirtualPrice}\n`);
 
-    _print("========== STAKING =========")
-    _print(`There are total   : ${totalSupplyY} yCRV issued by Y Curve Pool.`);
-    _print(`There are total   : ${totalStakedYAmount} yCRV staked in YFFI's yCRV staking pool.`);
-    _print(`                  = ${toDollar(totalStakedYAmount * YVirtualPrice)}\n`);
-    _print(`You are staking   : ${stakedYAmount} yCRV (${toFixed(stakedYAmount * 100 / totalStakedYAmount, 3)}% of the pool)`);
-    _print(`                  = ${toDollar(stakedYAmount * YVirtualPrice)}\n`);
+    _print("========== 质押 =========")
+    _print(`总共有  : ${totalSupplyY} yCRV issued by Y Curve Pool.`);
+    _print(`总共有  : ${totalStakedYAmount} yCRV staked in YFFI's yCRV staking pool.`);
+    _print(`          = ${toDollar(totalStakedYAmount * YVirtualPrice)}\n`);
+    _print(`你在质押: ${stakedYAmount} yCRV (${toFixed(stakedYAmount * 100 / totalStakedYAmount, 3)}% of the pool)`);
+    _print(`          = ${toDollar(stakedYAmount * YVirtualPrice)}\n`);
 
     // YFII REWARDS
-    _print("======== YFFI REWARDS ========")
+    _print("======== YFFI 奖励 ========")
     // _print(" (Temporarily paused until further emission model is voted by the community) ");
-    _print(`Claimable Rewards : ${toFixed(earnedYFFI, 4)} YFFI = $${toFixed(earnedYFFI * YFFIPrice, 2)}`);
+    _print(`领取奖励: ${toFixed(earnedYFFI, 4)} YFFI = $${toFixed(earnedYFFI * YFFIPrice, 2)}`);
     const YFFIWeeklyEstimate = rewardPerToken * stakedYAmount;
 
 
-    _print(`Hourly estimate   : ${toFixed(YFFIWeeklyEstimate / (24 * 7), 4)} YFFI = ${toDollar((YFFIWeeklyEstimate / (24 * 7)) * YFFIPrice)} (out of total ${toFixed(weekly_reward / (7 * 24), 2)} YFFI)`)
-    _print(`Daily estimate    : ${toFixed(YFFIWeeklyEstimate / 7, 2)} YFFI = ${toDollar((YFFIWeeklyEstimate / 7) * YFFIPrice)} (out of total ${toFixed(weekly_reward / 7, 2)} YFFI)`)
-    _print(`Weekly estimate   : ${toFixed(YFFIWeeklyEstimate, 2)} YFFI = ${toDollar(YFFIWeeklyEstimate * YFFIPrice)} (out of total ${weekly_reward} YFFI)`)
+    _print(`每小时估算: ${toFixed(YFFIWeeklyEstimate / (24 * 7), 4)} YFFI = ${toDollar((YFFIWeeklyEstimate / (24 * 7)) * YFFIPrice)} (out of total ${toFixed(weekly_reward / (7 * 24), 2)} YFFI)`)
+    _print(`每日估算  : ${toFixed(YFFIWeeklyEstimate / 7, 2)} YFFI = ${toDollar((YFFIWeeklyEstimate / 7) * YFFIPrice)} (out of total ${toFixed(weekly_reward / 7, 2)} YFFI)`)
+    _print(`每周估算  : ${toFixed(YFFIWeeklyEstimate, 2)} YFFI = ${toDollar(YFFIWeeklyEstimate * YFFIPrice)} (out of total ${weekly_reward} YFFI)`)
     const YFIWeeklyROI = (rewardPerToken * YFFIPrice) * 100 / (YVirtualPrice);
 
-    _print(`\nHourly ROI in USD : ${toFixed((YFIWeeklyROI / 7) / 24, 4)}%`)
-    _print(`Daily ROI in USD  : ${toFixed(YFIWeeklyROI / 7, 4)}%`)
-    _print(`Weekly ROI in USD : ${toFixed(YFIWeeklyROI, 4)}%`)
-    _print(`APY (unstable)    : ${toFixed(YFIWeeklyROI * 52, 4)}% \n`)
+    _print(`\n每小时投资回报率（美元）: ${toFixed((YFIWeeklyROI / 7) / 24, 4)}%`)
+    _print(`每日投资回报率（美元）    : ${toFixed(YFIWeeklyROI / 7, 4)}%`)
+    _print(`每周投资回报率（美元）    : ${toFixed(YFIWeeklyROI, 4)}%`)
+    _print(`年利率 (不稳定)           : ${toFixed(YFIWeeklyROI * 52, 4)}% \n`)
 
     const timeTilHalving = nextHalving - (Date.now() / 1000);
 
-    _print(`Next halving      : in ${forHumans(timeTilHalving)} \n`)
+    _print(`下一个减半  : in ${forHumans(timeTilHalving)} \n`)
 
     // CRV REWARDS
-    _print("======== CRV REWARDS ========")
-    _print(`    Not distributed yet`);
+    _print("======== CRV 奖励 ========")
+    _print(`    尚未分发`);
 
     hideLoading();
 

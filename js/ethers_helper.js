@@ -25,7 +25,7 @@ async function init_ethers() {
     else {
         App.provider = new ethers.providers.JsonRpcProvider(atob(ETHEREUM_NODE_URL));
         isMetaMaskInstalled = false;
-        _print("You don't have MetaMask installed! Falling back to backup node...\n (will likely to fail. Please install MetaMask extension).\n")
+        _print("您尚未安装MetaMask！退回到备份节点...\n (可能会失败。 请安装MetaMask扩展)。\n")
         sleep(10);
     }
 
@@ -38,7 +38,7 @@ async function init_ethers() {
             if (localStorage.hasOwnProperty('addr')) {
                 App.YOUR_ADDRESS = localStorage.getItem('addr');
             } else {
-                App.YOUR_ADDRESS = window.prompt("Enter your eth address.");
+                App.YOUR_ADDRESS = window.prompt("输入您的eth地址。");
             }
 
         } else {
@@ -48,7 +48,7 @@ async function init_ethers() {
     }
 
     if (!App.YOUR_ADDRESS || !ethers.utils.isAddress(App.YOUR_ADDRESS)) {
-        throw "Could not initialize your address. Make sure your address is checksum valid.";
+        throw "无法初始化您的地址。 确保您的地址是校验和有效。";
     }
 
     localStorage.setItem('addr', App.YOUR_ADDRESS);
@@ -86,7 +86,7 @@ const start = function (f) {
     f().catch((e)=> {
         _print(e);
         console.error(e);
-        _print("Oops something went wrong. Try refreshing the page.")
+        _print("哎呀！出事了。 尝试刷新页面。")
     });
 };
 
@@ -302,3 +302,100 @@ const hideLoading = function() {
 }
 
 const toDollar = formatter.format;
+
+const rewardsContract_stake = async function(stakingTokenAddr, rewardPoolAddr, App) {
+
+        const signer = App.provider.getSigner();
+
+        const TEND_TOKEN = new ethers.Contract(stakingTokenAddr, ERC20_ABI, signer);
+        const WEEBTEND_V2_TOKEN = new ethers.Contract(rewardPoolAddr, YFFI_REWARD_CONTRACT_ABI, signer);
+
+        const currentTEND = await TEND_TOKEN.balanceOf(App.YOUR_ADDRESS);
+        const allowedTEND = await TEND_TOKEN.allowance(App.YOUR_ADDRESS, rewardPoolAddr);
+
+        let allow = Promise.resolve();
+
+        if ((allowedTEND / 1e18) < (currentTEND / 1e18)) {
+            showLoading();
+            allow = TEND_TOKEN.approve(rewardPoolAddr, currentTEND)
+                .then(function(t) {
+                    return App.provider.waitForTransaction(t.hash);
+                }).catch(function() {
+                    hideLoading();
+                });
+        }
+
+        if ((currentTEND / 1e18) > 0) {
+            showLoading();
+            allow.then(async function() {
+                WEEBTEND_V2_TOKEN.stake(currentTEND, {gasLimit : 200000}).then(function(t) {
+                    App.provider.waitForTransaction(t.hash).then(function() {
+                        hideLoading();
+                    });
+                }).catch(function() {
+                    hideLoading();
+                });
+            });
+        } else {
+            alert("您没有权标！！");
+        }
+};
+
+const rewardsContract_unstake = async function(rewardPoolAddr, App) {
+    const signer = App.provider.getSigner();
+
+    const REWARD_POOL = new ethers.Contract(rewardPoolAddr, Y_STAKING_POOL_ABI, signer);
+    const currentStakedAmount = await REWARD_POOL.balanceOf(App.YOUR_ADDRESS);
+    const earnedYFFI = (await REWARD_POOL.earned(App.YOUR_ADDRESS)) / 1e18;
+
+    if (earnedYFFI > 0) {
+        showLoading();
+        REWARD_POOL.withdraw(currentStakedAmount)
+            .then(function(t) {
+                return App.provider.waitForTransaction(t.hash);
+            }).catch(function() {
+            hideLoading();
+        });
+    }
+};
+
+const rewardsContract_exit = async function(rewardPoolAddr, App) {
+    const signer = App.provider.getSigner();
+
+    const REWARD_POOL = new ethers.Contract(rewardPoolAddr, Y_STAKING_POOL_ABI, signer);
+    const currentStakedAmount = (await REWARD_POOL.balanceOf(App.YOUR_ADDRESS)) / 1e18;
+
+    if (currentStakedAmount > 0) {
+        showLoading();
+        REWARD_POOL.exit({gasLimit: 250000})
+            .then(function(t) {
+                return App.provider.waitForTransaction(t.hash);
+            }).catch(function() {
+            hideLoading();
+        });
+    }
+};
+
+const rewardsContract_claim = async function(rewardPoolAddr, App) {
+    const signer = App.provider.getSigner();
+
+    const WEEBTEND_V2_TOKEN = new ethers.Contract(rewardPoolAddr, Y_STAKING_POOL_ABI, signer);
+
+    console.log(App.YOUR_ADDRESS);
+
+    const earnedYFFI = (await WEEBTEND_V2_TOKEN.earned(App.YOUR_ADDRESS)) / 1e18;
+
+    if (earnedYFFI > 0) {
+        showLoading();
+        WEEBTEND_V2_TOKEN.getReward({gasLimit: 200000})
+            .then(function(t) {
+                return App.provider.waitForTransaction(t.hash);
+            }).catch(function() {
+            hideLoading();
+        });
+    }
+};
+
+const print_warning = function() {
+  _print_bold("警告：本合同未经审核。 我没有合同。 除非您已查看合同，否则请勿使用本网站。\n")
+};

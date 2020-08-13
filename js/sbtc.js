@@ -7,8 +7,8 @@ async function main() {
 
     const App = await init_ethers();
 
-    _print(`Initialized ${App.YOUR_ADDRESS}`);
-    _print("Reading smart contracts...");
+    _print(`初始化 ${App.YOUR_ADDRESS}`);
+    _print("阅读智能合约...");
 
     const CURVE_BTC_POOL = new ethers.Contract(CURVE_BTC_POOL_ADDR, CURVE_BTC_POOL_ABI, App.provider);
     const SYNTH_CRV_POOL = new ethers.Contract(SYNTH_crvRenWSBTC_STAKING_POOL_ADDR, SYNTH_crvRenWSBTC_STAKING_POOL_ABI, App.provider);
@@ -45,7 +45,7 @@ async function main() {
     const weekly_reward = await get_synth_weekly_rewards(SYNTH_CRV_POOL);
     const rewardPerToken = weekly_reward / totalStakedCrvRenWSBTCAmount;
 
-    _print("Finished reading smart contracts... Looking up prices... \n")
+    _print("已阅读完智能合约... 正在查找价格... \n")
 
     // CoinGecko price lookup
     const prices = await lookUpPrices(["havven", "republic-protocol", "wrapped-bitcoin", "sbtc", "renbtc", "balancer"]);
@@ -61,52 +61,52 @@ async function main() {
 
     const BALPrice = prices.balancer.usd;
 
-    _print("========== PRICES ==========")
-    _print(`1 SNX = $${SNXprice}`);
-    _print(`1 REN = $${RENprice}\n`);
+    _print("========== 价格比 ==========")
+    _print(`1 SNX    = $${SNXprice}`);
+    _print(`1 REN    = $${RENprice}\n`);
     _print(`1 BPT (79.82% SNX, 20.17% REN) = [${SNXperBPT} SNX, ${RENperBPT} REN]`);
-    _print(`      = $${BPTPrice}\n`);
+    _print(`         = $${BPTPrice}\n`);
 
     _print(`1 renBTC = $${renBTCPrice}`);
-    _print(`1 wBTC = $${wBTCPrice}`);
-    _print(`1 sBTC = $${SBTCPrice}\n`);
+    _print(`1 wBTC   = $${wBTCPrice}`);
+    _print(`1 sBTC   = $${SBTCPrice}\n`);
 
-    _print("========= STAKING ==========")
-    _print(`There are total   : ${totalCrvRenWSBTCSupply} crvRenWSBTC given out by Curve.`);
-    _print(`There are total   : ${totalStakedCrvRenWSBTCAmount} crvRenWSBTC staked in Synthetix's pool.`);
-    _print(`                  = ${toDollar(totalStakedCrvRenWSBTCAmount * crvRenWSBTCPricePerToken)}\n`);
-    _print(`You are staking   : ${stakedCRVAmount} crvRenWSBTC (${toFixed(100 * stakedCRVAmount / totalStakedCrvRenWSBTCAmount, 3)}% of the pool)`);
-    _print(`                  ≈ ${toDollar(crvRenWSBTCPricePerToken * stakedCRVAmount)} (Averaged)\n`);
+    _print("========= 质押 ==========")
+    _print(`总共有  : ${totalCrvRenWSBTCSupply} crvRenWSBTC given out by Curve.`);
+    _print(`总共有  : ${totalStakedCrvRenWSBTCAmount} crvRenWSBTC staked in Synthetix's pool.`);
+    _print(`          = ${toDollar(totalStakedCrvRenWSBTCAmount * crvRenWSBTCPricePerToken)}\n`);
+    _print(`你在质押: ${stakedCRVAmount} crvRenWSBTC (${toFixed(100 * stakedCRVAmount / totalStakedCrvRenWSBTCAmount, 3)}% of the pool)`);
+    _print(`          ≈ ${toDollar(crvRenWSBTCPricePerToken * stakedCRVAmount)} (Averaged)\n`);
 
-    _print("====== SNX/REN REWARDS =====")
-    _print(`Claimable Rewards : ${earnedBPT} BPT`);
-    _print(`                  = [${earnedBPT * SNXperBPT} SNX + ${earnedBPT * RENperBPT} REN]`);
-    _print(`                  = ${toDollar(earnedBPT * BPTPrice)}\n`)
+    _print("====== SNX/REN 奖励 =====")
+    _print(`领取奖励: ${earnedBPT} BPT`);
+    _print(`          = [${earnedBPT * SNXperBPT} SNX + ${earnedBPT * RENperBPT} REN]`);
+    _print(`          = ${toDollar(earnedBPT * BPTPrice)}\n`)
 
-    _print(`Weekly estimate   : ${rewardPerToken * stakedCRVAmount} BPT (out of total ${weekly_reward} BPT)`)
-    _print(`                  = ${toDollar((rewardPerToken * stakedCRVAmount) * BPTPrice)}`)
+    _print(`每周估算: ${rewardPerToken * stakedCRVAmount} BPT (out of total ${weekly_reward} BPT)`)
+    _print(`          = ${toDollar((rewardPerToken * stakedCRVAmount) * BPTPrice)}`)
     const SNXWeeklyROI = rewardPerToken * BPTPrice * 100 / crvRenWSBTCPricePerToken;
-    _print(`Weekly ROI        : ${toFixed(SNXWeeklyROI, 4)}%`)
-    _print(`APR (Unstable)    : ${toFixed(SNXWeeklyROI * 52, 4)}%\n`)
+    _print(`每周投资回报率 : ${toFixed(SNXWeeklyROI, 4)}%`)
+    _print(`年利率 (不稳定): ${toFixed(SNXWeeklyROI * 52, 4)}%\n`)
 
     // BAL REWARDS
-    _print("======== BAL REWARDS ========")
-    _print("WARNING: This estimate is based on last week's reward and current pool liquidity amount.")
-    _print("       : **It will be MUCH higher than what you actually get at the end of this week.** \n")
+    _print("======== BAL 奖励 ========")
+    _print("警告：这一估计是基于上周的奖励和当前的资金池流动性。")
+    _print("     : **这将比你在本周末得到的要高得多。** \n")
 
     const totalBALAmount = await getLatestTotalBALAmount(SYNTH_crvRenWSBTC_STAKING_POOL_ADDR);
     const BALPerToken = totalBALAmount * (1 / totalBPTInSynthContract);
     const yourBALEarnings = BALPerToken * rewardPerToken * stakedCRVAmount;
     const crvRenWSBTCPerDollar = (1 / crvRenWSBTCPricePerToken);
 
-    _print(`Weekly estimate   : ${toFixed(yourBALEarnings, 4)} BAL = ${toDollar(yourBALEarnings * BALPrice)} (out of total ${toFixed(totalBALAmount, 4)} BAL)`);
+    _print(`每周估算   : ${toFixed(yourBALEarnings, 4)} BAL = ${toDollar(yourBALEarnings * BALPrice)} (out of total ${toFixed(totalBALAmount, 4)} BAL)`);
     const BALWeeklyROI = (BALPerToken * BALPrice) * 100 * (rewardPerToken * crvRenWSBTCPerDollar);
-    _print(`Weekly ROI in USD : ${toFixed(BALWeeklyROI, 4)}%`);
-    _print(`APR (Unstable)    : ${toFixed(BALWeeklyROI * 52, 4)}%\n`);
+    _print(`每周投资回报率（美元）: ${toFixed(BALWeeklyROI, 4)}%`);
+    _print(`年利率 (不稳定)       : ${toFixed(BALWeeklyROI * 52, 4)}%\n`);
 
     // CRV REWARDS
-    _print("======== CRV REWARDS ========")
-    _print(`    Not distributed yet`);
+    _print("======== CRV 奖励 ========")
+    _print(`    尚未分发`);
 
     hideLoading();
 
